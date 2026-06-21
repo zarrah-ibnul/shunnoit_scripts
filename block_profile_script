@@ -1,0 +1,6 @@
+/ip pool
+add name=Block ranges=123.10.0.2-123.10.3.254
+/ppp profile
+add local-address=123.10.0.1 name=Block only-one=yes remote-address=Block dns-server=8.8.8.8
+/ip firewall filter
+add action=drop chain=forward comment="NetFee: Block all other traffic from expired clients" dst-address-list=!netfeebd.com src-address=123.10.0.0/22
