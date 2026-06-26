@@ -1,0 +1,5 @@
+/system ntp client
+set enabled=yes servers=time.google.com,time1.google.com,time2.google.com,time3.google.com
+/system clock set time-zone-name=Asia/Dhaka
+:delay 5s
+/system/clock/print
