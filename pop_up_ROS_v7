@@ -1,1 +1,93 @@
+/ip firewall address-list
+add address=shurjopay.com.bd list=netfeebd.com
+add address=ipn.bangla.express list=netfeebd.com
+add address=payment.mynagad.com list=netfeebd.com
+add address=ecom1.dutchbanglabank.com list=netfeebd.com
+add address=securepayments.bracbank.com list=netfeebd.com
+add address=ipaysafe.islamibankbd.com list=netfeebd.com
+add address=ibanking.tblbd.com list=netfeebd.com
+add address=citytouch.com.bd list=netfeebd.com
+add address=mybank.bankasia-bd.com list=netfeebd.com
+add address=skybanking.ebl-bd.com list=netfeebd.com
+add address=googletagmanager.com list=netfeebd.com
+add address=epay.thecitybank.com list=netfeebd.com
+add address=app.ipay.com.bd list=netfeebd.com
+add address=okwalletpayment.onebank.com.bd list=netfeebd.com
+add address=payment.portpos.com list=netfeebd.com
+add address=mbank.mutualtrustbank.com list=netfeebd.com
+add address=mpi.itcbd.com list=netfeebd.com
+add address=ecom.dutchbanglabank.com list=netfeebd.com
+add address=pib.primebank.com.bd list=netfeebd.com
+add address=ajax.googleapis.com list=netfeebd.com
+add address=merchant.aamarpay.com list=netfeebd.com
+add address=mfs.aamarpay.com list=netfeebd.com
+add address=api.ipify.org list=netfeebd.com
+add address=cpp.bka.sh list=netfeebd.com
+add address=promo.cpp.bkash.com list=netfeebd.com
+add address=shop.bkash.com list=netfeebd.com
+add address=cellfinpay.islamibankbd.com list=netfeebd.com
+add address=cdnjs.cloudflare.com list=netfeebd.com
+add address=nagad.aamarpay.com list=netfeebd.com
+add address=checkoutbg.pay.bka.sh list=netfeebd.com
+add address=signaler-pa.clients6.google.com list=netfeebd.com
+add address=securepay.shurjopayment.com list=netfeebd.com
+add address=admin.shurjopayment.com list=netfeebd.com
+add address=fonts.googleapis.com list=netfeebd.com
+add address=www.google-analytics.com list=netfeebd.com
+add address=payment.bkash.com list=netfeebd.com
+add address=engine.shurjopayment.com list=netfeebd.com
+add address=tc-customer-ui-backend.pgw-tc.pay.bka.sh list=netfeebd.com
+add address=fonts.gstatic.com list=netfeebd.com
+add address=static.cloudflareinsights.com list=netfeebd.com
+add address=secure.aamarpay.com list=netfeebd.com
+add address=cdn.jsdelivr.net list=netfeebd.com
+add address=code.jquery.com list=netfeebd.com
+add address=stackpath.bootstrapcdn.com list=netfeebd.com
+add address=www.googletagmanager.com list=netfeebd.com
+add address=aamarpay.com list=netfeebd.com
+add address=checkout-customer-ui-backend.pgw-checkout.pay.bka.sh list=netfeebd.com
+add address=client.pay.bka.sh list=netfeebd.com
+add address=scripts.pay.bka.sh list=netfeebd.com
+add address=bkash.aamarpay.com list=netfeebd.com
+add address=unpkg.com list=netfeebd.com
+add address=cdn.aamarpay.com list=netfeebd.com
+add address=centinelapi.cardinalcommerce.com list=netfeebd.com
+add address=accosa-ivs.s3.ap-south-1.amazonaws.com list=netfeebd.com
+add address=writer.cardinalcommerce.com list=netfeebd.com
+add address=epay-comm.sslcommerz.com list=netfeebd.com
+add address=epay-gw.sslcommerz.com list=netfeebd.com
+add address=securepay.sslcommerz.com list=netfeebd.com
+add address=epay.sslcommerz.com list=netfeebd.com
+add address=api-epay.sslcommerz.com list=netfeebd.com
+add address=geo.cardinalcommerce.com list=netfeebd.com
+add address=netfeebd.net list=netfeebd.com
+add address=netzbd.com list=netfeebd.com
+add address=netfeebd.com list=netfeebd.com
+add address=netfee.top list=netfeebd.com
+add address=i.postimg.cc list=netfeebd.com
+
+/ip pool
+add name=Block ranges=123.10.0.2-123.10.3.254
+/ppp profile
+add local-address=123.10.0.1 name=Block only-one=yes remote-address=Block dns-server=8.8.8.8
+
+/ip firewall filter
+add action=accept chain=forward comment="NetFee: Allow DNS over TCP for expired notification" dst-port=53 protocol=tcp src-address=123.10.0.0/22
+add action=accept chain=forward comment="NetFee: Allow DNS over UDP for expired notification" dst-port=53 protocol=udp src-address=123.10.0.0/22
+add action=drop chain=forward comment="NetFee: Block all other traffic from expired clients" dst-address-list=!netfeebd.com src-address=123.10.0.0/22
+
+/ip firewall nat
+add action=masquerade chain=srcnat comment="NetFee: Redirect HTTP to notification page-NAT" src-address=123.10.0.0/22
+add action=redirect chain=dstnat comment="NetFee: Redirect HTTP to notification page" dst-port=80 protocol=tcp src-address=123.10.0.0/22 to-ports=8090
+add action=redirect chain=dstnat comment="NetFee: Redirect HTTP UDP to notification page" dst-port=80 protocol=udp src-address=123.10.0.0/22 to-ports=8090
+add action=redirect chain=dstnat comment="NetFee: Redirect HTTPS to notification page" dst-address-list=!netfeebd.com dst-port=443 protocol=tcp src-address=123.10.0.0/22 to-ports=8090
+
+/ip proxy
+set enabled=yes max-client-connections=10000 max-server-connections=1 port=\
+    8090
+/ip proxy access
+add action=redirect action-data=123.10.0.1:8090 dst-address=!123.10.0.1 \
+    dst-port=80 src-address=123.10.0.0/22
+add action=deny dst-address=0.0.0.0/0 src-address=0.0.0.0/0
+/ip/proxy/reset-html
 
