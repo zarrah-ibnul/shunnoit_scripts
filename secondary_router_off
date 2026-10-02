@@ -1,0 +1,2 @@
+/ip firewall mangle
+add chain=postrouting action=change-ttl new-ttl=set:2 dst-address=10.133.0.0/24 comment="NetFee Anti-Sharing Policy"
