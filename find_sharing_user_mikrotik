@@ -1,0 +1,2 @@
+/ip firewall mangle
+add action=add-src-to-address-list address-list=NetFee_Sharing_User address-list-timeout=2m chain=forward connection-state=established in-interface=all-ppp ttl=less-than:62
