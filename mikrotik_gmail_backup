@@ -1,0 +1,28 @@
+# NetFee BACKUP SCRIPT
+:log info "Starting backup..."
+
+# Configure Email Settings
+/tool e-mail set from=zibnul1@gmail.com port=587 server=smtp.gmail.com tls=starttls user=zibnul1@gmail.com password=zwejqlgejyqkqqaq
+
+# Create backup files
+/system backup save name="backup.backup" dont-encrypt=yes
+:delay 10
+/export file="export.rsc" 
+:delay 10
+
+# Get router info for subject
+:local routerName [/system identity get name]
+:local date [/system clock get date]
+
+# Send emails
+/tool e-mail send to="your_email@gmail.com" subject="Backup $routerName $date" file="backup.backup"
+:delay 5
+/tool e-mail send to="tour_email@gmail.com" subject="Export $routerName $date" file="export.rsc"
+:delay 5
+
+
+# Clean up
+/file remove "backup.backup"
+/file remove "export.rsc"
+
+:log info "Backup completed"
