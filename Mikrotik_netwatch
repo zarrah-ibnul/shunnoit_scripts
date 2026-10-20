@@ -1,0 +1,11 @@
+/tool netwatch
+add comment="Google Primary DNS" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=8.8.8.8 interval=10s name=8.8.8.8 type=icmp up-script=""
+add comment="Cloudflare Primary DNS" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=1.1.1.1 interval=10s name=1.1.1.1 type=icmp up-script=""
+add comment="Quad9 Secure DNS" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=9.9.9.9 interval=10s name=9.9.9.9 type=icmp up-script=""
+add comment="OpenDNS Cisco" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=208.67.222.222 interval=10s name=208.67.222.222 type=icmp up-script=""
+add comment="Google Secondary DNS" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=8.8.4.4 interval=10s name=8.8.4.4 type=icmp up-script=""
+add comment="Cloudflare Secondary DNS" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=1.0.0.1 interval=10s name=1.0.0.1 type=icmp up-script=""
+add comment="Facebook Meta IP" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=31.13.69.35 interval=15s name=31.13.69.35 type=icmp up-script=""
+add comment="Google Service IP" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=142.250.190.46 interval=15s name=142.250.190.46 type=icmp up-script=""
+add comment="Fastly CDN IP" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=151.101.193.69 interval=15s name=151.101.193.69 type=icmp up-script=""
+add comment="Microsoft Service IP" disabled=no down-script="log warning (\"Netwatch: Host \" . \$host . \" is DOWN!\")" host=13.107.42.14 interval=15s name=13.107.42.14 type=icmp up-script=""
