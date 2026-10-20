@@ -1,0 +1,2 @@
+/ip firewall mangle
+add action=change-mss chain=forward new-mss=1452 protocol=tcp tcp-flags=syn tcp-mss=1460-65535
