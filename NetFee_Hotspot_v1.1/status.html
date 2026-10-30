@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    $(if refresh-timeout)
+    <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
+    $(endif)
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>Internet Hotspot - Status</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e6f0ff;
+            --text: #2b2d42;
+            --text-light: #8d99ae;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .status-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            text-align: center;
+            transition: var(--transition);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.15);
+            border: 3px solid var(--white);
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .status-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .status-table tr:not(:last-child) {
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .status-table td {
+            padding: 12px 0;
+            vertical-align: top;
+        }
+
+        .status-table td:first-child {
+            color: var(--text-light);
+            font-weight: 500;
+            width: 40%;
+        }
+
+        .status-table td:last-child {
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 16px;
+        }
+
+        .logout-btn:hover {
+            background: #3a56d4;
+            transform: translateY(-2px);
+        }
+
+        .advert-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .advert-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .status-card {
+                padding: 30px 24px;
+            }
+            
+            .status-table td {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <script>
+        $(if advert-pending == 'yes')
+            var popup = '';
+            function focusAdvert() {
+                if (window.focus) popup.focus();
+            }
+            function openAdvert() {
+                popup = open('$(link-advert)', 'hotspot_advert', '');
+                setTimeout("focusAdvert()", 1000);
+            }
+        $(endif)
+        
+        function openLogout() {
+            if (window.name != 'hotspot_status') return true;
+            open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
+            window.close();
+            return false;
+        }
+    </script>
+</head>
+<body $(if advert-pending == 'yes') onLoad="openAdvert()" $(endif)>
+    <div class="status-card">
+        <img src="img/logo.png" alt="Logo" class="logo">
+        
+        $(if login-by == 'trial')
+            <h1>Hi, trial user!</h1>
+        $(elif login-by != 'mac')
+            <h1>Hi, $(username)!</h1>
+        $(endif)
+
+        <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
+            <table class="status-table">
+                <tr><td>IP address</td><td>$(ip)</td></tr>
+                <tr><td>Bytes up / down</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
+                $(if session-time-left)
+                    <tr><td>Connected / left</td><td>$(uptime) / $(session-time-left)</td></tr>
+                $(else)
+                    <tr><td>Connected</td><td>$(uptime)</td></tr>
+                $(endif)
+                $(if blocked == 'yes')
+                    <tr><td>Status</td><td><a href="$(link-advert)" class="advert-link" target="hotspot_advert">Advertisement required</a></td></tr>
+                $(elif refresh-timeout)
+                    <tr><td>Status refresh</td><td>$(refresh-timeout)</td></tr>
+                $(endif)
+            </table>
+            
+            $(if login-by-mac != 'yes')
+                <button type="submit" class="logout-btn">Log Out</button>
+            $(endif)
+        </form>
+        
+        <p class="footer">Powered by NetFee</p>
+    </div>
+</body>
+</html>

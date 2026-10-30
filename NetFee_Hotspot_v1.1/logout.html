@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>Internet Hotspot - Log out</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e6f0ff;
+            --text: #2b2d42;
+            --text-light: #8d99ae;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logout-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            text-align: center;
+            transition: var(--transition);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.15);
+            border: 3px solid var(--white);
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .status-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .status-table tr:not(:last-child) {
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .status-table td {
+            padding: 12px 0;
+            vertical-align: top;
+        }
+
+        .status-table td:first-child {
+            color: var(--text-light);
+            font-weight: 500;
+            width: 40%;
+        }
+
+        .status-table td:last-child {
+            font-weight: 500;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 16px;
+        }
+
+        .login-btn:hover {
+            background: #3a56d4;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .logout-card {
+                padding: 30px 24px;
+            }
+            
+            .status-table td {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <script>
+        function openLogin() {
+            if (window.name != 'hotspot_logout') return true;
+            open('$(link-login)', '_blank', '');
+            window.close();
+            return false;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="logout-card">
+        <img src="img/logo.png" alt="Logo" class="logo">
+        
+        <h1>You have been logged out</h1>
+        
+        <table class="status-table">
+            <tr><td>Username</td><td>$(username)</td></tr>
+            <tr><td>IP address</td><td>$(ip)</td></tr>
+            <tr><td>MAC address</td><td>$(mac)</td></tr>
+            <tr><td>Session time</td><td>$(uptime)</td></tr>
+            $(if session-time-left)
+            <tr><td>Time left</td><td>$(session-time-left)</td></tr>
+            $(endif)
+            <tr><td>Bytes up / down</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
+        </table>
+
+        <form action="$(link-login)" name="login" onSubmit="return openLogin()">
+            <button type="submit" class="login-btn">Log In Again</button>
+        </form>
+        
+        <p class="footer">Powered by NetFee</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Internet Hotspot - Login</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+    />
+    <style>
+      /* ... keep your styles unchanged ... */
+      :root {
+        --primary: #4361ee;
+        --primary-light: #e6f0ff;
+        --text: #2b2d42;
+        --text-light: #8d99ae;
+        --white: #ffffff;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        --border-radius: 12px;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .login-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 420px;
+        padding: 40px;
+        text-align: center;
+        transition: var(--transition);
+        animation: fadeIn 0.6s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 24px;
+        box-shadow: 0 8px 20px rgba(67, 97, 238, 0.15);
+        border: 3px solid var(--white);
+      }
+      h1 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .subtitle {
+        color: var(--text-light);
+        font-size: 14px;
+        margin-bottom: 32px;
+      }
+      .input-group {
+        position: relative;
+        margin-bottom: 20px;
+        text-align: left;
+      }
+      .input-group input {
+        width: 100%;
+        padding: 14px 16px 14px 48px;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--border-radius);
+        font-size: 15px;
+        transition: var(--transition);
+        background-color: #f8fafc;
+      }
+      .input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      }
+      .input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        color: var(--text-light);
+      }
+      button[type='submit'] {
+        width: 100%;
+        padding: 14px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        margin-top: 8px;
+      }
+      button[type='submit']:hover {
+        background: #3a56d4;
+        transform: translateY(-2px);
+      }
+      .register-btn {
+        display: inline-block;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #4361ee, #4895ef);
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        font-size: 15px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        transition: var(--transition);
+        margin: 24px 0;
+      }
+      .register-btn:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 16px rgba(67, 97, 238, 0.25);
+      }
+      .footer {
+        margin-top: 32px;
+        font-size: 13px;
+        color: var(--text-light);
+      }
+      @media (max-width: 480px) {
+        .login-card {
+          padding: 30px 24px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- md5.js is required only if you need CHAP hashing -->
+    <script src="/md5.js"></script>
+
+    <!-- If server renders chap-id/challenge, expose them to JS (keeps your template style) -->
+    <script>
+      const CHAP_ID = '$(chap-id)';
+      const CHAP_CHALLENGE = '$(chap-challenge)';
+    </script>
+
+    <div class="login-card">
+      <!-- MAIN LOGIN FORM -->
+      <form
+        name="login"
+        action="$(link-login-only)"
+        method="post"
+        id="login-form"
+        $(if
+        chap-id)
+        onsubmit="return false"
+        <!--
+        prevent
+        default
+        if
+        CHAP
+        handled
+        by
+        JS
+        --
+      >
+        <input type="hidden" name="dst" value="$(link-orig)" />
+        <input type="hidden" name="popup" value="true" />
+
+        <!-- Logo -->
+        <img src="img/logo.png" alt="Logo" class="logo" />
+
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Sign in to access the internet</p>
+
+        <!-- Username -->
+        <div class="input-group">
+          <!-- svg icon -->
+          <svg
+            class="input-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+          <input
+            id="login-username"
+            name="username"
+            type="text"
+            placeholder="Username"
+            required
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="input-group">
+          <svg
+            class="input-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
+          </svg>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <button type="submit" id="connect-btn">Connect</button>
+      </form>
+
+      <!-- SELF REGISTRATION FORM -->
+      <form id="reg-form" style="margin-top: 18px">
+        <div class="input-group">
+          <input
+            id="mobile-input"
+            name="mobile"
+            type="text"
+            placeholder="Mobile"
+            required
+          />
+        </div>
+
+        <!-- Self Registration Button -->
+        <button type="submit" id="selfreg-btn">Self Registration</button>
+      </form>
+
+      <p class="footer">Powered by NetFee</p>
+    </div>
+
+    <script>
+     document
+    .getElementById('login-form')
+    .addEventListener('submit', function (e) {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value || '';
+        const plainPassword = document.getElementById('login-password').value || '';
+
+        const baseUrl = 'https://app.netfeebd.com/isp/hotspot/4111/connect';
+        const params = new URLSearchParams();
+
+        params.set('username', username);
+        params.set('password', plainPassword);  // spelling corrected
+        params.set('mikrotik', 'static');      //this is mikrotik Name..change it to mikroik name as in netfee
+
+        const queryString = params.toString();
+        const fullUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+        
+        window.location.href = fullUrl;
+    });
+
+      // Handle Self Registration submit
+      document
+        .getElementById('reg-form')
+        .addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          const mobile = document.getElementById('mobile-input').value || '';
+          const base = 'https://app.netfeebd.com/isp/hotspot/4111';
+          const params = new URLSearchParams();
+
+          params.set('mobile', mobile);
+
+          const queryString = params.toString();
+          window.location.href = queryString ? `${base}?${queryString}` : base;
+        });
+
+      function getParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name);
+      }
+
+      window.addEventListener('load', function () {
+        const username = getParam('username');
+        const password = getParam('password');
+
+        if (username && password) {
+          const unameEl = document.getElementById('login-username');
+          const pwdEl = document.getElementById('login-password');
+          if (unameEl) unameEl.value = username;
+          if (pwdEl) pwdEl.value = password;
+          document.getElementById('login-form').requestSubmit();
+        }
+      });
+    </script>
+  </body>
+</html>
